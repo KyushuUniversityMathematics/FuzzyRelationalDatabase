@@ -1,0 +1,1094 @@
+\input texinfo
+@iftex
+@catcode`@#=6
+@def@fref#1{@xrefX[#1,,@code{#1},,,]}
+@def@b#1{{@bf@gt #1}}
+@catcode`@#=@other
+@end iftex
+@overfullrule=0pt
+@c -*-texinfo-*-
+@comment %**start of header
+
+@setfilename FuzzyDatabase
+
+@settitle Relational Database Module
+
+@comment %**end of header
+@comment %@setchapternewpage odd
+
+@titlepage
+
+@title Relational Database Module
+@subtitle Relational Strict and Fuzzy Database User's Manual
+@subtitle Version 0.1
+@subtitle @today{}
+
+@author  by Mohammad Deni Akbar, Kyushu University.
+@table @t
+@item Ver. 1.0
+30 July 2014
+@end table
+@vskip 0pt plus 1filll
+Copyright @copyright{} 2014 Kyushu University, All rights reserved.
+@page
+@end titlepage
+
+
+@synindex vr fn
+
+@node Top,, (dir), (dir)
+
+@menu
+* Introduction::
+* Relational Database::
+* Fuzzy Relational Database::
+* Index::
+@end menu
+
+@c ======================================================
+@node Introduction,Relational Database,, Top
+@chapter Introduction
+
+This is a Mathematica Module for database theory especially for relational database.
+Using database theory, we also develop theory for using fuzzy database.
+Implement database operation and also fuzzy relation using relational calculus to make some formula in Mathematica.
+
+To use this package "RelationDatabase",
+users should set a directory where the modules is stored.
+
+@example
+[Example]
+
+SetDirectory[
+  FileNameJoin[{$HomeDirectory, "Dropbox/Ymken2013 (1)/2013_Deni"}]];
+<< RelationalDatabase`;
+@end example
+
+@vskip 0pt plus 1filll
+@noindent
+
+
+@node Relational Database, Fuzzy Relational Database, Introduction, Top
+@chapter Relational Database
+
+@menu
+** Basic Notations::
+** Database Operations::
+@end menu
+
+@node Basic Notations, Database Operations, , Relational Database
+@section Basic Notations
+
+@menu
+*** AllPairs::
+*** not::
+*** RelComp::
+*** RelInv::
+*** Id::
+*** r::
+*** SubsetQ::
+*** DBProduct::
+*** Idx::
+*** RhoXa::
+*** Intersections
+*** Rho::
+*** Theta::
+@end menu
+
+@c ----------------------------------------------------
+@node AllPairs, not, , Basic Notations
+@subsection @code{AllPairs}
+@findex AllPairs
+
+@table @t
+@item AllPairs[@var{alldata}]
+:: Create all pairs in a list @var{alldata}.
+@end table
+
+@table @var
+@item alldata
+List of data
+@item return
+List of pairs
+@end table
+
+@example
+[Example] 
+DB[Name] = @{"Deni", "Herpin", "Fatih"@};
+AllPairs[DB[Name]]
+@{@{"Deni", "Deni"@}, @{"Deni", "Herpin"@}, @{"Deni", "Fatih"@}, @{"Herpin", 
+  "Deni"@}, @{"Herpin", "Herpin"@}, @{"Herpin", "Fatih"@}, @{"Fatih", 
+  "Deni"@}, @{"Fatih", "Herpin"@}, @{"Fatih", "Fatih"@}@}
+@end example
+
+@c ----------------------------------------------------
+@node not, RelComp, AllPairs, Basic Notations
+@subsection @code{not}
+@findex not
+
+@table @t
+@item not[@var{A},@var{Y}]
+:: Difference set between @var{A} and @var{Y}.
+@end table
+
+@table @var
+@item A, Y
+set
+@item return
+set
+@end table
+
+@example
+[Example] 
+A = @{Name, Subject, Room@}; y = @{Name, Subject@};
+not[A,y]
+@{Room@}
+@end example
+
+@c ----------------------------------------------------
+@node RelComp, RelInv, not, Basic Notations
+@subsection @code{RelComp}
+@findex RelComp
+
+@table @t
+@item RelComp[@var{x},@var{y}]
+:: Composition relation of @var{x} and @var{y}.
+@end table
+
+@table @var
+@item x, y
+relations
+@item return
+relation
+@end table
+
+@example
+[Example] 
+x = @{@{"Deni", "Mathematics"@}, @{"Herpin", "Algorithm"@}, @{"Fatih", 
+    "Mathematics"@}@};
+y = @{@{"Mathematics", 103@}, @{"Algorithm", 205@}@};
+RelComp[x,y]
+@{@{Deni,103@},@{Fatih,103@},@{Herpin,205@}@}
+@{1,1@}
+@end example
+
+@c ----------------------------------------------------
+@node RelInv, Id, RelComp, Basic Notations
+@subsection @code{RelInv}
+@findex RelInv
+
+@table @t
+@item RelInv[@var{a}]
+::Invers of relation @var{a}, @var{a} is pair of element attribute.
+@end table
+
+@table @var
+@item a
+relations(pair of element attribute)
+@item return
+relations(pair of element attribute)
+@end table
+
+@example
+[Example] 
+x = @{@{"Deni", "Mathematics"@}, @{"Herpin", "Algorithm"@}, @{"Fatih", 
+    "Mathematics"@}@};
+RelInv[x]
+@{@{"Mathematics", "Deni"@}, @{"Algorithm", 
+  "Herpin"@}, @{"Mathematics", "Fatih"@}@}
+@end example
+
+@c ----------------------------------------------------
+@node Id, r, RelInv, Basic Notations
+@subsection @code{Id}
+@findex Id
+
+@table @t
+@item Id[@var{a}]
+::Identity relation element of set @var{a}
+@end table
+
+@table @var
+@item a
+set
+@item return
+relation set(pair of elements set)
+@end table
+
+@example
+[Example] 
+y = @{@{"Mathematics", 103@}, @{"Algorithm", 205@}@};
+Id[y]
+@{@{@{"Mathematics", 103@}, @{"Mathematics", 103@}@}, @{@{"Algorithm", 
+   205@}, @{"Algorithm", 205@}@}@}
+@end example
+
+@c ----------------------------------------------------
+@node r, SubsetQ, Id, Basic Notations
+@subsection @code{r}
+@findex r
+
+@table @t
+@item r[@var{a}]
+::relation contains pair of set @var{a}
+@end table
+
+@table @var
+@item a
+set
+@item return
+pair of element set
+@end table
+
+@example
+[Example] 
+Name = 1; Subject = 2; Class = @{Name, Subject@};
+DB[Name] = @{"Deni", "Herpin", "Fatih"@};
+DB[Subject] = @{"Mathematics", "Algorithm"@};
+
+r[DB[Name]]
+@{@{"Deni", "Deni"@}, @{"Fatih", "Fatih"@}, @{"Herpin", "Herpin"@}@}
+@end example
+
+@c ----------------------------------------------------
+@node SubsetQ, DBProduct, r, Basic Notations
+@subsection @code{SubsetQ}
+@findex SubsetQ
+
+@table @t
+@item SubsetQ[@var{a},@var{b}]
+::to confirm that every element of set @var{a} is subset of set @var{b}.
+@end table
+
+@table @var
+@item a,b
+set
+@item return
+True or False
+@end table
+
+@example
+[Example] 
+DB[Name] = @{"Deni", "Herpin", "Fatih"@};
+
+SubsetQ[@{"Deni", "Fatih"@}, DB[Name]]
+True
+@end example
+
+@c ----------------------------------------------------
+@node DBProduct, Idx, SubsetQ, Basic Notations
+@subsection DBProduct
+
+@menu
+**** Two Set::
+**** One Set::
+@end menu
+
+@c ----------------------------------------------------
+@node Two Set, One Set, , DBProduct 
+@subsubsection @code{Two Set}
+@findex Two sets
+
+@table @t
+@item DBProduct[@var{a},@var{b}]
+::Cartesian product between element of set attribute @var{a} and element of set attribute @var{b}.
+@end table
+
+@table @var
+@item a, b
+set
+@item return
+Set
+@end table
+
+@example
+[Example] 
+DB[Name] = @{"Deni", "Herpin", "Fatih"@};
+DB[Subject] = @{"Mathematics", "Algorithm"@};
+
+DBProduct[DB[Name], DB[Subject]]
+@{@{"Deni", "Mathematics"@}, @{"Deni", "Algorithm"@}, @{"Herpin", 
+  "Mathematics"@}, @{"Herpin", "Algorithm"@}, @{"Fatih", 
+  "Mathematics"@}, @{"Fatih", "Algorithm"@}@}
+@end example
+
+@c ----------------------------------------------------
+@node One Set, ,One Set, DBProduct 
+@subsubsection @code{Collection Sets}
+@findex Collection sets
+
+@table @t
+@item DBProduct[@var{l}]
+::Cartesian product of collection attribute l, element of l is attibute of database.
+@end table
+
+@table @var
+@item l
+collection of sets
+@item return
+Set
+@end table
+
+@example
+[Example] 
+Name = 1; Subject = 2; Class = @{Name, Subject@};
+DB[Name] = @{"Deni", "Herpin", "Fatih"@};
+DB[Subject] = @{"Mathematics", "Algorithm"@};
+
+DBProduct[Class]
+@{@{"Deni", "Mathematics"@}, @{"Deni", "Algorithm"@}, @{"Herpin", 
+  "Mathematics"@}, @{"Herpin", "Algorithm"@}, @{"Fatih", 
+  "Mathematics"@}, @{"Fatih", "Algorithm"@}@}
+@end example
+
+@c ----------------------------------------------------
+@node Idx, RhoXa, DBProduct, Basic Notations
+@subsection @code{Idx}
+@findex Idx
+
+@table @t
+@item Idx[@var{x},@var{a}]
+::Position an attribute @var{a} in set of attribute @var{x}.
+@end table
+
+@table @var
+@item a
+An element of attribute set
+@item x
+Set of attribute
+@item return
+Position of a in x
+@end table
+
+@example
+[Example] 
+Name = 1; Subject = 2; Class = @{Name, Subject@};
+DB[Name] = @{"Deni", "Herpin", "Fatih"@};
+DB[Subject] = @{"Mathematics", "Algorithm"@};
+
+Idx[Class, Name]
+1
+@end example
+
+@c ----------------------------------------------------
+@node RhoXa, Intersections, Idx, Basic Notations
+@subsection @code{RhoXa}
+@findex RhoXa
+
+@table @t
+@item RhoXa[@var{x},@var{a}]
+::Pair of projection element of set attribute @var{x} to an attribute @var{a}, a is element of x
+@end table
+
+@table @var
+@item a
+An element of attribute set
+@item x
+Set of attribute
+@item return
+Set
+@end table
+
+@example
+[Example] 
+Name = 1; Subject = 2; Class = @{Name, Subject@};
+DB[Name] = @{"Deni", "Herpin", "Fatih"@};
+DB[Subject] = @{"Mathematics", "Algorithm"@};
+
+RhoXa[Class, Name]
+@{@{@{"Deni", "Mathematics"@}, "Deni"@}, @{@{"Deni", "Algorithm"@}, 
+  "Deni"@}, @{@{"Herpin", "Mathematics"@}, 
+  "Herpin"@}, @{@{"Herpin", "Algorithm"@}, 
+  "Herpin"@}, @{@{"Fatih", "Mathematics"@}, 
+  "Fatih"@}, @{@{"Fatih", "Algorithm"@}, "Fatih"@}@}
+@end example
+
+@c ----------------------------------------------------
+@node Intersections, Rho, RhoXa, Basic Notations
+@subsection @code{Intersections}
+@findex Intersections
+
+@table @t
+@item Intersections[@var{l}]
+::Intersection of collection set.
+@end table
+
+@table @var
+@item l
+An Collection set
+@item return
+Set
+@end table
+
+@example
+[Example] 
+Intersections[@{@{1, 2@}, @{1@}@}]
+{1}
+@end example
+
+@c ----------------------------------------------------
+@node Rho, Theta, Intersections, Basic Notations
+@subsection @code{Rho}
+@findex Rho
+
+@table @t
+@item Rho[@var{x},@var{y}]
+::Pair of projection element of set attribute x to element of set attribute y, 
+such that set attribute @var{y} is subset of set attribute @var{x}
+@end table
+
+@table @var
+@item x,y
+Attribute set
+@item return
+Relation Set between element of attribute set
+@end table
+
+@example
+[Example] 
+Name = 1; Subject = 2; Class = @{Name, Subject@};
+DB[Name] = @{"Deni", "Herpin", "Fatih"@};
+DB[Subject] = @{"Mathematics", "Algorithm"@};
+
+Rho[Class, @{Name@}]
+@{@{@{"Deni", "Algorithm"@}, "Deni"@}, @{@{"Deni", "Mathematics"@}, 
+  "Deni"@}, @{@{"Fatih", "Algorithm"@}, 
+  "Fatih"@}, @{@{"Fatih", "Mathematics"@}, 
+  "Fatih"@}, @{@{"Herpin", "Algorithm"@}, 
+  "Herpin"@}, @{@{"Herpin", "Mathematics"@}, "Herpin"@}@}
+@end example
+
+@c ----------------------------------------------------
+@node Theta, , Rho, Basic Notations
+@subsection @code{Theta}
+@findex Theta
+
+@table @t
+@item Theta[@var{A},@var{x}]
+::Pairs of equivalence relation set of attribute @var{x} from complete set of attribute @var{A}, with condition attribute set @var{x} is subset of attribute sets @var{A}
+@end table
+
+@table @var
+@item A,x
+Attribute set
+@item return
+Sets relation between element of attribute set x and attribute set A
+@end table
+
+@example
+[Example] 
+Name = 1; Subject = 2; Class = @{Name, Subject@};
+DB[Name] = @{"Deni", "Herpin", "Fatih"@};
+DB[Subject] = @{"Mathematics", "Algorithm"@};
+
+Theta[Class, @{Name@}]
+@{@{@{"Deni", "Algorithm"@}, @{"Deni", "Algorithm"@}@}, @{@{"Deni", 
+   "Algorithm"@}, @{"Deni", "Mathematics"@}@}, @{@{"Deni", 
+   "Mathematics"@}, @{"Deni", "Algorithm"@}@}, @{@{"Deni", 
+   "Mathematics"@}, @{"Deni", "Mathematics"@}@}, @{@{"Fatih", 
+   "Algorithm"@}, @{"Fatih", "Algorithm"@}@}, @{@{"Fatih", 
+   "Algorithm"@}, @{"Fatih", "Mathematics"@}@}, @{@{"Fatih", 
+   "Mathematics"@}, @{"Fatih", "Algorithm"@}@}, @{@{"Fatih", 
+   "Mathematics"@}, @{"Fatih", "Mathematics"@}@}, @{@{"Herpin", 
+   "Algorithm"@}, @{"Herpin", "Algorithm"@}@}, @{@{"Herpin", 
+   "Algorithm"@}, @{"Herpin", "Mathematics"@}@}, @{@{"Herpin", 
+   "Mathematics"@}, @{"Herpin", "Algorithm"@}@}, @{@{"Herpin", 
+   "Mathematics"@}, @{"Herpin", "Mathematics"@}@}@}
+@end example
+
+
+
+@c ======================================================
+@node Database Operations, ,Basic Notations, , Relational Database
+@section Database Operations
+
+@menu
+*** Projection::
+*** Natural Join::
+*** Selection::
+@end menu
+
+@c ----------------------------------------------------
+@node Projection, Natural Join,, Database Operations
+@subsection @code{Projection}
+@findex Projection
+
+@table @t
+@item DBProjection[@var{A},@var{rdb},@var{y}]
+::Projection of relation database @var{rdb} with attributes @var{A} to attributes @var{y}, such that y is subset of A
+@end table
+
+@table @var
+@item A
+Complete set of attribute with a relation
+@item rdb
+relations set of element every attribute
+@item y
+Set of attribute that we want to select, subset set of A
+@item return
+pair elements of attribute sets y
+@end table
+
+@example
+[Example] 
+Name = 1; Subject = 2; Class = @{Name, Subject@};
+DB[Name] = @{"Deni", "Herpin", "Fatih"@};
+DB[Subject] = @{"Mathematics", "Algorithm"@};
+rClass = @{@{"Deni", "Mathematics"@}, @{"Fatih", "Mathematics"@}@};
+
+DBProjection[Class, rClass, @{Subject@}]
+@{@{"Mathematics", "Mathematics"@}@}
+@end example
+
+@c ----------------------------------------------------
+@node Natural Join, Selection, Projection, Database Operations
+@subsection @code{Natural Join}
+@findex Natural Join
+
+@table @t
+@item NaturalJoin[@var{x},@var{y},@var{r1},@var{r2}]
+::Join relation between relation database @var{r1} with attributes @var{x} and 
+relation database @var{r2} with attributes @var{y}
+@end table
+
+@table @var
+@item x,y
+Complete set of attribute of a relation
+@item r1, r2
+relations set of element every attribute
+@item return
+pair elements of union attribute sets x with elements r1 and y with elements r2
+@end table
+
+@example
+[Example] 
+Name = 1; Subject = 2; Class = @{Name, Subject@};
+DB[Name] = @{"Deni", "Herpin", "Fatih"@};
+DB[Subject] = @{"Mathematics", "Algorithm"@};
+rClass = @{@{"Deni", "Mathematics"@}, @{"Fatih", "Mathematics"@}@};
+
+Room = 3;
+DB[Room] = {103, 205, 304, 202}; 
+Lecture = @{Subject, Room@};
+rLecture = @{@{"Mathematics", 103@}, @{"Algorithm", 205@}@};
+
+NaturalJoin[Class, Lecture, rClass, rLecture]
+@{@{@{"Deni", "Mathematics", 103@}, @{"Deni", "Mathematics", 
+   103@}@}, @{@{"Fatih", "Mathematics", 103@}, @{"Fatih", "Mathematics", 
+   103@}@}@}
+@end example
+
+@c ----------------------------------------------------
+@node Selection,, Natural Join, Database Operations
+@subsection @code{Selection}
+@findex Selection
+
+@table @t
+@item Selection[@var{A},@var{r},@var{Condition}]
+::Selection of relation database @var{r} with attribute @var{A}, with some condition in
+ attribute a, for example a<b, a>b, b<a<c, etc. b and c is value that we want
+@end table
+
+@table @var
+@item A
+Complete set of attribute of a relation
+@item r
+relations set of element every attribute
+@item Condition
+Condition that is selected, consider a is subset of A. So the condition is mean the condition of a that we want. For example, in relation Test has attribute set name and score, Test=@{Name, Score@}. From relation Test, we want to select only elements with condition: Score > 50.
+@item return
+pair elements of relation sets.
+@end table
+
+@example
+[Example] 
+Name = 1; Subject = 2; Class = @{Name, Subject@};
+DB[Name] = @{"Deni", "Herpin", "Fatih"@};
+DB[Subject] = @{"Mathematics", "Algorithm"@};
+rClass = @{@{"Deni", "Mathematics"@}, @{"Fatih", "Mathematics"@}@};
+
+Score = 4; Result = @{Name, Subject, Score@};
+DB[Score] = @{0, 20, 50, 60, 70, 80, 90, 100@};
+rScore = @{@{"Deni", "Mathematics", 90@}, @{"Deni", "Algorithm", 
+    80@}, @{"Herpin", "Mathematics", 60@}, @{"Herpin", "Algorithm", 
+    70@}, @{"Fatih", "Mathematics", 100@}, @{"Fatih", "Algorithm", 90@}@};
+
+DBSelection[Result, rScore, {Score} > 70]
+@{@{@{"Deni", "Algorithm", 80@}, @{"Deni", "Algorithm", 80@}@}, @{@{"Deni", 
+   "Mathematics", 90@}, @{"Deni", "Mathematics", 90@}@}, @{@{"Fatih", 
+   "Algorithm", 90@}, @{"Fatih", "Algorithm", 90@}@}, @{@{"Fatih", 
+   "Mathematics", 100@}, @{"Fatih", "Mathematics", 100@}@}@}
+@end example
+
+@c ======================================================
+@node Fuzzy Relational Database, Index, Relational Database, Top
+@chapter Fuzzy Relational Database
+
+@menu
+** Basic Fuzzy Notations::
+** Fuzzy Operations::
+@end menu
+
+
+@c ======================================================
+@node Basic Fuzzy Notations, Fuzzy Operations,, Fuzzy Relational Database
+@section Basic Fuzzy Notations
+
+@menu
+*** FuzzyRelComp::
+*** FuzzyId::
+*** ToFuzzy::
+*** FuzzyRho::
+*** FuzzyRelInv::
+*** FuzzyIntersection::
+*** FuzzyUnion::
+@end menu
+
+@c ----------------------------------------------------
+@node FuzzyRelComp, FuzzyId,, Basic Fuzzy Notations
+@subsection @code{FuzzyRelComp}
+@findex FuzzyRelComp
+
+@table @t
+@item FuzzyRelComp[@var{x},@var{y}]
+:: Compisiton of fuzzy relation between element of fuzzy set attribute @var{x} and element
+ of fuzzy set attribute @var{y}.
+@end table
+
+@table @var
+@item x, y
+Fuzzy relations set.
+@item return
+Fuzzy relation set.
+@end table
+
+@example
+[Example] 
+rLikes = @{@{"Deni", "Mathematics", 0.9@}, @{"Herpin", "Algorithm", 
+    0.5@}, @{"Fatih", "Mathematics", 0.7@}@};
+rFill = @{@{"Mathematics", "Coding", 0.6@}, @{"Algorithm", "Coding", 
+    0.8@}, @{"Mathematics", "Discrete Theory", 0.8@}, @{"Algorithm", 
+    "Discrete Theory", 0.6@}@};
+    
+FuzzyRelComp[rLikes, rFill]
+@{@{"Deni", "Coding", 0.6@}, @{"Deni", "Discrete Theory", 
+  0.8@}, @{"Herpin", "Coding", 0.5@}, @{"Herpin", "Discrete Theory", 
+  0.5@}, @{"Fatih", "Coding", 0.6@}, @{"Fatih", "Discrete Theory", 0.7@}@}
+@end example
+
+@c ----------------------------------------------------
+@node FuzzyId, ToFuzzy, FuzzyRelComp, Basic Notations
+@subsection @code{FuzzyId}
+@findex FuzzyId
+
+@table @t
+@item FuzzyId[@var{a}]
+::Identity fuzzy relation element of fuzzy set @var{a}
+@end table
+
+@table @var
+@item a
+set
+@item return
+relation fuzzy set(pair of elements set)
+@end table
+
+@example
+[Example] 
+rLikes = @{@{"Deni", "Mathematics", 0.9@}, @{"Herpin", "Algorithm", 
+    0.5@}, @{"Fatih", "Mathematics", 0.7@}@};
+    
+FuzzyId[rLikes]
+@{@{@{"Deni", "Mathematics"@}, @{"Deni", "Mathematics"@}, 
+  0.9@}, @{@{"Herpin", "Algorithm"@}, @{"Herpin", "Algorithm"@}, 
+  0.5@}, @{@{"Fatih", "Mathematics"@}, @{"Fatih", "Mathematics"@}, 0.7@}@};
+@end example
+
+@c ----------------------------------------------------
+@node ToFuzzy, FuzzyRho, FuzzyId, Basic Notations
+@subsection @code{ToFuzzy}
+@findex ToFuzzy
+
+@table @t
+@item ToFuzzy[@var{r}]
+::To give fuzzy value of set @var{r}
+@end table
+
+@table @var
+@item r
+Relation sets
+@item return
+Relation fuzzy set with fuzzy value
+@end table
+
+@example
+[Example] 
+rExperience = @{@{"Young", "Low"@}, @{"Old", "High"@}@};
+
+ToFuzzy[rExperience]
+@{ @{"Young", "Low", 1. @}, @{"Old", "High", 1.@} @}
+@end example
+
+@c ----------------------------------------------------
+@node FuzzyRho, FuzzyRelInv, ToFuzzy, Basic Notations
+@subsection @code{FuzzyRho}
+@findex FuzzyRho
+
+@table @t
+@item FuzzyRho[@var{x},@var{y}]
+::Pair of projection element of set attribute @var{x} to element of set attribute @var{y} with
+fuzzy value in every pair,such that @var{y} is subset of @var{x}
+@end table
+
+@table @var
+@item x,y
+Relation sets
+@item return
+Relation fuzzy set with fuzzy value
+@end table
+
+@example
+[Example] 
+Name = 1; Subject = 2; Likes = @{Name, Subject@};
+DB[Name] = @{"Deni", "Herpin", "Fatih"@};
+DB[Subject] = @{"Mathematics", "Algorithm"@};
+
+FuzzyRho[Likes, @{Subject@}]
+@{@{@{"Deni", "Algorithm"@}, "Algorithm", 
+  1.@}, @{@{"Deni", "Mathematics"@}, "Mathematics", 
+  1.@}, @{@{"Fatih", "Algorithm"@}, "Algorithm", 
+  1.@}, @{@{"Fatih", "Mathematics"@}, "Mathematics", 
+  1.@}, @{@{"Herpin", "Algorithm"@}, "Algorithm", 
+  1.@}, @{@{"Herpin", "Mathematics"@}, "Mathematics", 1.@}@}
+@end example
+
+@c ----------------------------------------------------
+@node FuzzyRelInv, FuzzyIntersection, FuzzyRho, Basic Notations
+@subsection @code{FuzzyRelInv}
+@findex FuzzyRelnv
+
+@table @t
+@item FuzzyRelInv[@var{a}]
+::Invers of fuzzy relation @var{a}, @var{a} is pair of element attribute with fuzzy value.
+@end table
+
+@table @var
+@item a
+Fuzzy relations(pair of element attribute with fuzzy value)
+@item return
+Fuzzy relations(pair of element attribute with fuzzy value)
+@end table
+
+@example
+[Example] 
+rFill = @{@{"Mathematics", "Coding", 0.6@}, @{"Algorithm", "Coding", 
+    0.8@}, @{"Mathematics", "Discrete Theory", 0.8@}, @{"Algorithm", 
+    "Discrete Theory", 0.6@}@};
+    
+FuzzyRelInv[rFill]
+@{@{"Coding", "Mathematics", 0.6@}, @{"Coding", "Algorithm", 
+  0.8@}, @{"Discrete Theory", "Mathematics", 0.8@}, @{"Discrete Theory", 
+  "Algorithm", 0.6@}@}
+@end example
+
+@c ----------------------------------------------------
+@node FuzzyIntersection, FuzzyUnion, FuzzyRelInv, Basic Notations
+@subsection @code{FuzzyIntersection}
+@findex FuzzyIntersection
+
+@menu
+**** Two Sets::
+**** Collection set::
+@end menu
+
+@c ----------------------------------------------------
+@node Two Sets, Collestion Set,, FuzzyIntersection
+@subsubsection @code{Two Sets}
+@findex FuzzyIntersection[x,y]
+
+@table @t
+@item FuzzyIntersection[@var{x},@var{y}]
+::Intersection between fuzzy relation set @var{x} and fuzzy relation set @var{y}.
+@end table
+
+@table @var
+@item x,y
+Fuzzy relations set.
+@item return
+Fuzzy relations set.
+@end table
+
+@example
+[Example] 
+rMathDept = @{@{"Mathematics", "Coding", 0.6@}, @{"Algorithm", "Coding", 
+    0.8@}, @{"Mathematics", "Discrete Theory", 0.8@}, @{"Algorithm", 
+    "Discrete Theory", 0.6@}@};
+rInfDept = @{@{"Mathematics", "Coding", 0.9@}, @{"Algorithm", "Coding", 
+    0.9@}, @{"Mathematics", "Discrete Theory", 0.8@}, @{"Algorithm", 
+    "Discrete Theory", 0.6@}@};
+    
+FuzzyIntersection[rMathDept, rInfDept]
+@{@{"Mathematics", "Coding", 0.6@}, @{"Algorithm", "Coding", 
+  0.8@}, @{"Mathematics", "Discrete Theory", 0.8@}, @{"Algorithm", 
+  "Discrete Theory", 0.6@}@}
+@end example
+
+@c ----------------------------------------------------
+@node Collestion Set,, Two Sets, FuzzyIntersection
+@subsubsection @code{Collection set}
+@findex FuzzyIntersection[d]
+
+@table @t
+@item FuzzyIntersection[@var{d}]
+::Intersection between collection of fuzzy relation sets in one set @var{d}.
+@end table
+
+@table @var
+@item d
+Collection of fuzzy relations sets in one set.
+@item return
+Fuzzy relations set.
+@end table
+
+@example
+[Example] 
+rAll= @{@{"Mathematics", "Coding", 0.6@}, @{"Algorithm", "Coding", 
+    0.8@}, @{"Mathematics", "Discrete Theory", 0.8@}, @{"Algorithm", 
+    "Discrete Theory", 0.6@},@{"Mathematics", "Coding", 0.9@}, @{"Algorithm", "Coding", 
+    0.9@}, @{"Mathematics", "Discrete Theory", 0.8@}, @{"Algorithm", 
+    "Discrete Theory", 0.6@}@};
+    
+FuzzyIntersection[rAll]
+@{@{"Algorithm", "Coding", 0.8@}, @{"Algorithm", 
+  "Discrete Theory", 0.6@}, @{"Mathematics", "Coding", 
+  0.6@}, @{"Mathematics", "Discrete Theory", 0.8@}@}
+@end example
+
+@c ----------------------------------------------------
+@node FuzzyUnion,, FuzzyIntersection, Basic Notations
+@subsection @code{FuzzyUnion}
+@findex FuzzyUnion[d]
+
+@menu
+**** Two Sets::
+**** Collection set::
+@end menu
+
+@c ----------------------------------------------------
+@node Two Sets, Collection set,, FuzzyUnion
+@subsubsection @code{Two Sets}
+@findex FuzzyUnion[x,y]
+
+@table @t
+@item FuzzyUnion[@var{x},@var{y}]
+::Union between fuzzy relation set @var{x} and fuzzy relation set @var{y}.
+@end table
+
+@table @var
+@item x,y
+Fuzzy relation set.
+@item return
+Fuzzy relation set.
+@end table
+
+@example
+[Example] 
+rMathDept = @{@{"Mathematics", "Coding", 0.6@}, @{"Algorithm", "Coding", 
+    0.8@}, @{"Mathematics", "Discrete Theory", 0.8@}, @{"Algorithm", 
+    "Discrete Theory", 0.6@}@};
+rInfDept = @{@{"Mathematics", "Coding", 0.9@}, @{"Algorithm", "Coding", 
+    0.9@}, @{"Mathematics", "Discrete Theory", 0.8@}, @{"Algorithm", 
+    "Discrete Theory", 0.6@}@};
+    
+FuzzyUnion[rMathDept, rInfDept]
+@{@{"Mathematics", "Coding", 0.9@}, @{"Algorithm", "Coding", 
+  0.9@}, @{"Mathematics", "Discrete Theory", 0.8@}, @{"Algorithm", 
+  "Discrete Theory", 0.6@}@}
+@end example
+
+@c ----------------------------------------------------
+@node Collection set,,Two Sets, FuzzyUnion
+@subsubsection @code{Collections set}
+@findex FuzzyUnion[d]
+
+@table @t
+@item FuzzyUnion[@var{d}]
+::Union between collection of fuzzy relation sets in one set @var{d}.
+@end table
+
+@table @var
+@item d
+Collection of fuzzy relations sets in one set.
+@item return
+Fuzzy relations set.
+@end table
+
+@example
+[Example] 
+rAll= @{@{"Mathematics", "Coding", 0.6@}, @{"Algorithm", "Coding", 
+    0.8@}, @{"Mathematics", "Discrete Theory", 0.8@}, @{"Algorithm", 
+    "Discrete Theory", 0.6@},@{"Mathematics", "Coding", 0.9@}, @{"Algorithm", "Coding", 
+    0.9@}, @{"Mathematics", "Discrete Theory", 0.8@}, @{"Algorithm", 
+    "Discrete Theory", 0.6@}@};
+    
+FuzzyUnion[rAll]
+@{@{"Algorithm", "Coding", 0.9@}, @{"Algorithm", 
+  "Discrete Theory", 0.6@}, @{"Mathematics", "Coding", 
+  0.9@}, @{"Mathematics", "Discrete Theory", 0.8@}@}
+@end example
+
+@c ======================================================
+@node Fuzzy Operations,, Basic Notations, Fuzzy Relational Database
+@section Fuzzy Operations
+
+@menu
+*** FuzzySelection::
+*** FuzzyProjection::
+*** FuzzyNaturalJoin::
+@end menu
+
+@c ----------------------------------------------------
+@node FuzzySelection,FuzzyProjection, , Fuzzy Operations
+@subsection @code{FuzzySelection}
+@findex Selection
+
+@table @t
+@item FuzzySelection[@var{A},@var{r},@var{Condition}]
+::Selection of fuzzy relation set database @var{r} with attribute @var{A}, with some condition in
+ attribute a, for example a<b, a>b, b<a<c, etc. b and c is value that we want
+@end table
+
+@table @var
+@item A
+Complete set of attribute of a fuzzy relation
+@item r
+Fuzzy relations set of element every attribute
+@item Condition
+Condition that is selected, consider a is subset of A. So the condition is mean the condition of a that we want. For example, in relation Test has attribute set name and score, Test=@{Name, Score@}. From relation Test, we want to select only elements with condition: Score > 50.
+@item return
+pair elements of fuzzy relation sets.
+@end table
+
+@example
+[Example] 
+Name = 1; Subject = 2; Likes = @{Name, Subject@};
+DB[Name] = @{"Deni", "Herpin", "Fatih"@};
+DB[Subject] = @{"Mathematics", "Algorithm"@};
+rLikes = @{@{"Deni", "Mathematics", 0.9@}, @{"Herpin", "Algorithm", 
+    0.5@}, @{"Fatih", "Mathematics", 0.7@}@};
+
+FuzzySelection[Likes, rLikes, {Subject} == "Mathematics"]
+@{@{@{"Deni", "Mathematics"@}, @{"Deni", "Mathematics"@}, 
+  0.9@}, @{@{"Fatih", "Mathematics"@}, @{"Fatih", "Mathematics"@}, 0.7@}@}
+@end example
+
+@c ----------------------------------------------------
+@node FuzzyProjection, FuzzyNatural Join, FuzzySelection, Fuzzy Operations
+@subsection @code{FuzzyProjection}
+@findex FuzzyProjection
+
+@table @t
+@item FuzzyProjection[@var{A},@var{rdb},@var{y}]
+::Projection of fuzzy relation set database @var{rdb} with attributes @var{A} to attributes @var{y}, such that y is subset of A
+@end table
+
+@table @var
+@item A
+Complete set of attribute with a fuzzy relation
+@item rdb
+Fuzzy relations set of element every attribute
+@item y
+Set of attribute that we want to select, subset set of A
+@item return
+pair elements of attribute fuzzy sets y
+@end table
+
+@example
+[Example] 
+Name = 1; Subject = 2; Theory = 5;
+DB[Name] = @{"Deni", "Herpin", "Fatih"@};
+DB[Subject] = @{"Mathematics", "Algorithm"@};
+DB[Theory] = @{"Coding", "Discrete Theory"@};
+Complete = @{Name, Subject, Theory@};
+rComplete = @{@{"Deni", "Mathematics", "Coding", 0.8@}, @{"Deni", 
+    "Mathematics", "Discrete Theory", 0.9@}, @{"Herpin", "Algorithm", 
+    "Coding", 0.8@}, @{"Herpin", "Mathematics", "Discrete Theory", 
+    0.6@}, @{"Fatih", "Mathematics", "Coding", 0.6@}, @{"Fatih", 
+    "Algorithm", "Discrete Theory", 0.9@}@};
+    
+FuzzyProjection[Complete, rComplete, {Subject, Theory}]
+@{@{@{"Algorithm", "Coding"@}, @{"Algorithm", "Coding"@}, 
+  0.8@}, @{@{"Algorithm", "Discrete Theory"@}, @{"Algorithm", 
+   "Discrete Theory"@}, 
+  0.9@}, @{@{"Mathematics", "Coding"@}, @{"Mathematics", "Coding"@}, 
+  0.8@}, @{@{"Mathematics", "Discrete Theory"@}, @{"Mathematics", 
+   "Discrete Theory"@}, 0.9@}@}
+@end example
+
+@c ----------------------------------------------------
+@node FuzzyNaturalJoin, ,FuzzyProjection, Fuzzy Operations
+@subsection @code{FuzzyNaturalJoin}
+@findex FuzzyNaturalJoin
+
+@table @t
+@item NaturalJoin[@var{x},@var{y},@var{r1},@var{r2}]
+::Join relation between fuzzy relation set database @var{r1} with attributes @var{x} and 
+fuzzy relation set database @var{r2} with attributes @var{y}
+@end table
+
+@table @var
+@item x,y
+Complete set of attribute of a fuzzy relation
+@item r1, r2
+Fuzzy relations set of element every attribute
+@item return
+pair elements of union attribute fuzzy sets x with elements r1 and y with elements r2
+@end table
+
+@example
+[Example] 
+Name = 1; Subject = 2; Likes = {Name, Subject};
+DB[Name] = @{"Deni", "Herpin", "Fatih"@};
+DB[Subject] = @{"Mathematics", "Algorithm"@};
+Theory = 5;
+DB[Theory] = {"Coding", "Discrete Theory"}; Fill = {Subject, Theory};
+rLikes = @{@{"Deni", "Mathematics", 0.9@}, @{"Herpin", "Algorithm", 
+    0.5@}, @{"Fatih", "Mathematics", 0.7@}@};
+rFill = @{@{"Mathematics", "Coding", 0.6@}, @{"Algorithm", "Coding", 
+    0.8@}, @{"Mathematics", "Discrete Theory", 0.8@}, @{"Algorithm", 
+    "Discrete Theory", 0.6@}@};
+
+FuzzyNaturalJoin[Likes, Fill, rLikes, rFill]
+@{@{@{"Deni", "Mathematics", "Coding"@}, @{"Deni", "Mathematics",
+    "Coding"@}, 
+  0.6@}, @{@{"Deni", "Mathematics", "Discrete Theory"@}, @{"Deni", 
+   "Mathematics", "Discrete Theory"@}, 
+  0.8@}, @{@{"Fatih", "Mathematics", "Coding"@}, @{"Fatih", "Mathematics", 
+   "Coding"@}, 
+  0.6@}, @{@{"Fatih", "Mathematics", "Discrete Theory"@}, @{"Fatih", 
+   "Mathematics", "Discrete Theory"@}, 
+  0.7@}, @{@{"Herpin", "Algorithm", "Coding"@}, @{"Herpin", "Algorithm", 
+   "Coding"@}, 
+  0.5@}, @{@{"Herpin", "Algorithm", "Discrete Theory"@}, @{"Herpin", 
+   "Algorithm", "Discrete Theory"@}, 0.5@}@}
+@end example
+
+@c ======================================================
+@node Index, , Fuzzy Relational Database, Top
+@unnumbered Index
+
+@printindex fn
+
+@c @printindex cp
+@c ky: @kindex, pg: @pindex, tp: @tindex
+@iftex
+@vfill @eject
+@end iftex
+@c @summarycontents
+@contents
+@bye
+
+
+
+
+
